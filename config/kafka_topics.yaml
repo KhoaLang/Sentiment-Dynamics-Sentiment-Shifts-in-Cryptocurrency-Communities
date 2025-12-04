@@ -1,0 +1,58 @@
+# Kafka Topics Configuration
+
+topics:
+  # Raw ingestion topics
+  reddit_raw:
+    name: "reddit_raw"
+    partitions: 6
+    replication_factor: 1
+    config:
+      cleanup.policy: "delete"
+      retention.ms: "604800000"  # 7 days
+      segment.ms: "86400000"  # 1 day
+      compression.type: "snappy"
+
+  twitter_raw:
+    name: "twitter_raw"
+    partitions: 6
+    replication_factor: 1
+    config:
+      cleanup.policy: "delete"
+      retention.ms: "604800000"
+      segment.ms: "86400000"
+      compression.type: "snappy"
+
+  webhook_raw:
+    name: "webhook_raw"
+    partitions: 3
+    replication_factor: 1
+    config:
+      cleanup.policy: "delete"
+      retention.ms: "86400000"  # 1 day
+      compression.type: "snappy"
+
+  # Enriched topics (optional)
+  enriched_sentiment:
+    name: "enriched_sentiment"
+    partitions: 6
+    replication_factor: 1
+    config:
+      cleanup.policy: "compact"
+      compression.type: "lz4"
+
+  # Dead Letter Queue
+  dead_letter_queue:
+    name: "dead_letter_queue"
+    partitions: 3
+    replication_factor: 1
+    config:
+      cleanup.policy: "delete"
+      retention.ms: "2592000000"  # 30 days
+      compression.type: "gzip"
+
+# Schema Registry Subjects
+schemas:
+  reddit_message: "reddit_message-value"
+  twitter_message: "twitter_message-value"
+  webhook_message: "webhook_message-value"
+  enriched_message: "enriched_message-value"
