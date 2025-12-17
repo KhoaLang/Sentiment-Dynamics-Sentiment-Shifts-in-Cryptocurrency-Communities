@@ -1,0 +1,51 @@
+[project]
+name = "sentiment-dynamics-pipeline"
+version = "0.1.0"
+description = "Local Spark + Delta Lake + Kafka + MinIO pipeline"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "delta-spark==3.1.0",
+    "unstructured>=0.18.21",
+]
+
+# 🔹 Tell Python where packages live
+[tool.setuptools]
+package-dir = {"" = "main"}
+
+[tool.setuptools.packages.find]
+where = ["main"]
+
+dependencies = [
+    # Spark (LOCKED to compatible version)
+    "pyspark==3.5.1",
+
+    # Delta Lake Python API (matches Spark 3.5)
+    "delta-spark==3.1.0",
+
+    # Kafka clients (for producers / consumers)
+    "kafka-python>=2.0.2",
+
+    # Data utils
+    "pandas>=2.1.0",
+    "pyarrow>=14.0.1",
+
+    # Logging / utils
+    "python-dotenv>=1.0.0"
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0.0",
+    "black>=24.0.0",
+    "ruff>=0.3.0",
+    # Spark (LOCKED to compatible version)
+    "pyspark==3.5.1",
+    "delta-spark==3.1.0",
+    # Kafka clients (for producers / consumers)
+    "kafka-python>=2.0.2",
+    # Data utils
+    "pandas>=2.1.0",
+    "pyarrow>=14.0.1",
+    # Logging / utils
+    "python-dotenv>=1.0.0",
+]

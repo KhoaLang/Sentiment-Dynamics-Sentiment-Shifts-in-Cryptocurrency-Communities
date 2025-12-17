@@ -1,102 +1,70 @@
-# Real-Time Streaming Sentiment Analysis System
-
-A comprehensive real-time streaming pipeline for sentiment analysis on social media data using Apache Kafka, Spark Structured Streaming, and Apache Iceberg with Medallion architecture.
-
-## Architecture Overview
+# Infra kick-start
 
 ```
-Data Sources → Kafka → Spark Jobs → Iceberg Bronze → Silver → Gold → Dashboards
-                ↓
-            [Model Serving, Vector Store, Search Layer]
+docker compose up
 ```
 
-### Core Components
 
-1. **Data Ingestion**
-   - Reddit API scraper
-   - Twitter/X API scraper
-   - Webhook-based collectors
-   - Kafka topics for raw events
-
-2. **Streaming Processing (Spark)**
-   - Preprocess Job → Bronze layer
-   - Sentiment Analysis Job → Silver layer
-   - Enrichment Job → Silver layer
-   - Aggregation Job → Gold layer
-
-3. **Storage (Apache Iceberg)**
-   - Bronze: Raw immutable data
-   - Silver: Cleaned & enriched
-   - Gold: Aggregated analytics
-
-4. **Side Systems**
-   - Model serving (FastAPI)
-   - Vector store (Milvus)
-   - Search (OpenSearch)
-   - OLAP (ClickHouse)
-
-## Quick Start
-
-```bash
-# 1. Start infrastructure
-docker-compose up -d
-
-# 2. Install Python dependencies
-pip install -r requirements.txt
-
-# 3. Set up environment
-cp .env.example .env
-# Edit .env with your API keys
-
-# 4. Initialize Iceberg tables
-python scripts/init_iceberg.py
-
-# 5. Start data collection
-python collectors/reddit_collector.py &
-python collectors/twitter_collector.py &
-
-# 6. Start Spark streaming jobs
-spark-submit --master local[*] streaming/preprocess_job.py
-spark-submit --master local[*] streaming/sentiment_job.py
-spark-submit --master local[*] streaming/enrichment_job.py
-spark-submit --master local[*] streaming/aggregation_job.py
-```
-
-## Project Structure
+# Run spark job
 
 ```
-sentiment-streaming/
-├── collectors/          # Data source collectors
-├── streaming/           # PySpark streaming jobs
-├── models/              # ML model interfaces
-├── storage/             # Iceberg table definitions
-├── config/              # Configuration files
-├── docker/              # Docker configurations
-├── scripts/             # Utility scripts
-├── tests/               # Tests
-├── notebooks/           # Jupyter notebooks
-└── docs/                # Documentation
+spark-submit \
+  --packages io.delta:delta-spark_2.12:3.1.0,org.apache.hadoop:hadoop-aws:3.3.4,com.amazonaws:aws-java-sdk-bundle:1.12.367,org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.3 \
+  bronze_streaming.py
 ```
 
-## Data Flow
 
-1. **Collection**: Scrapers fetch social media data and publish to Kafka
-2. **Bronze**: Raw data stored with minimal transformation
-3. **Silver**: Cleaned data with sentiment scores and enrichment
-4. **Gold**: Aggregated metrics for analytics and dashboards
+# Minio
 
-## Technology Stack
+Install mc client
 
-- **Streaming**: Apache Kafka, Spark Structured Streaming
-- **Storage**: Apache Iceberg, MinIO
-- **Processing**: PySpark, Python 3.9+
-- **ML/Analytics**: Scikit-learn, Transformers
-- **Infrastructure**: Docker Compose
-- **Monitoring**: Prometheus, Grafana
+```
+brew install minio/stable/mc
 
-## Configuration
+mc alias set local http://localhost:9000 minio minio123
+```
 
-- Environment variables in `.env`
-- Kafka topics in `config/kafka_topics.yaml`
-- Iceberg schema in `storage/schemas/`
-- Spark configs in `config/spark_config.yaml`
+Apply this policy to allow a table the ListBucket permission
+
+```
+mc anonymous set-json ./main/storage/policies/delta-bronze-policy.json local/delta-bronze
+```
+
+Check for status
+
+```
+mc stat local/delta-bronze
+```
+
+List all child
+
+```
+mc ls local/delta-bronze
+```
+
+
+# Scraper
+
+Run Reddit Scraper
+
+```
+python3 ./reddit_scraper.py \
+  --sites-file ./sites_to_scrape.txt \
+  --kafka-bootstrap localhost:9092\
+  --kafka-topic reddit.bronze\
+  --limit 5 \
+  --max-pages 2 \
+  --sleep-min 4 \
+  --sleep-max 8
+```
+
+# Kafka
+
+Monitor Kafka Topic in kafka container.
+
+```
+/opt/kafka/bin/kafka-console-consumer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic reddit.bronze \
+  --from-beginning
+```
