@@ -35,8 +35,7 @@ bronze_schema = StructType([
     StructField("subreddit", StringType(), True),
     StructField("raw_text", StringType(), True),
     StructField("created_utc", TimestampType(), True),
-    StructField("ingested_at", TimestampType(), True),
-    StructField("source_url", StringType(), True),
+    StructField("ingested_at", TimestampType(), True)
 ])
 
 kafka_df = (
@@ -44,7 +43,7 @@ kafka_df = (
         .format("kafka")
         .option("kafka.bootstrap.servers", "localhost:9092")
         .option("subscribe", "reddit.bronze")
-        .option("startingOffsets", "earliest")
+        .option("startingOffsets", "latest")
         .load()
 )
 

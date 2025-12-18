@@ -89,7 +89,7 @@ def scrape_subreddit(
                 "event_id": post.get("data-fullname"),
                 "subreddit": post.get("data-subreddit"),
                 "raw_text": title_text,
-                "created_utc": None,
+                "created_utc": datetime.fromtimestamp(int(post.get("data-timestamp")) / 1000, tz=timezone.utc),
                 "ingested_at": datetime.now(timezone.utc).isoformat(),
                 "source_url": post.get("data-permalink"),
                 "matched_keywords": [
@@ -99,6 +99,8 @@ def scrape_subreddit(
 
             if len(posts) >= limit:
                 break
+        
+        # print(posts)
 
         after = extract_after_cursor(soup)
         if not after:

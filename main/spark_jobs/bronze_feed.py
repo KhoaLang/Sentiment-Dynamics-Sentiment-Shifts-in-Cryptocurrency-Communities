@@ -38,52 +38,17 @@ spark = (
 )
 
 
-print("=========== Configs ===========")
-conf = spark.sparkContext.getConf().getAll()
-for k, v in conf:
-    if "s3a" in k.lower() or "timeout" in k.lower():
-        print(k, v)
-
-
 bronze_schema = StructType([
-    StructField("event_id", StringType(), True),
-    StructField("subreddit", StringType(), True),
-    StructField("raw_text", StringType(), True),
-    StructField("created_utc", TimestampType(), True),
-    StructField("ingested_at", TimestampType(), True),
+    StructField("event_id", StringType()),
+    StructField("subreddit", StringType()),
+    StructField("raw_text", StringType()),
+    StructField("created_utc", TimestampType()),
+    StructField("ingested_at", TimestampType())
 ])
 
-sample_data = [
-    (
-        "t3_abc123",
-        "dataengineering",
-        "Delta Lake streaming from Kafka is awesome",
-        datetime(2025, 12, 13, 18, 32, 10),
-        datetime(2025, 12, 13, 18, 32, 45)
-    ),
-    (
-        "t3_def456",
-        "machinelearning",
-        "Anyone using LLMs for sentiment analysis?",
-        datetime(2025, 12, 13, 18, 35, 2),
-        datetime(2025, 12, 13, 13, 35, 40)
-    ),
-    (
-        "t3_ghi789",
-        "bigdata",
-        "Spark Structured Streaming vs Flink",
-        datetime(2025, 12, 13, 18, 40, 11),
-        datetime(2025, 12, 13, 18, 40, 55)
-    )
-]
-
-df = spark.createDataFrame(sample_data, schema=bronze_schema)
-
-# Write to delta table
-# df.show(truncate=False)
-df.write.format("delta")\
-    .mode("append")\
+spark.createDataFrame([], bronze_schema) \
+    .write.format("delta") \
+    .mode("overwrite") \
     .save("s3a://delta-bronze/reddit_raw")
 
-# spark.range(1).write.format("delta") \
-#   .save("s3a://delta-bronze/reddit_raw")
+print("✅ Bronze table bootstrapped")

@@ -20,11 +20,12 @@ spark = (
 )
 
 bronze_path = "s3a://delta-bronze/reddit_raw"
+silver_path = "s3a://delta-silver/reddit_clean"
 
 df = (
     spark.read
         .format("delta")
-        .load(bronze_path)
+        .load(silver_path)
 )
 
 print(f"\n\n\n{df.count()} records")
