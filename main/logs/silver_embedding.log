@@ -1,0 +1,8 @@
+25/12/19 10:18:24 WARN Utils: Your hostname, MacBook-Air-cua-KhoaiQuin.local resolves to a loopback address: 127.0.0.1; using 192.168.1.32 instead (on interface en0)
+25/12/19 10:18:24 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+Traceback (most recent call last):
+  File "/Users/khoaiquin/Storage/he_tinh_toan_phan_bo/Sentiment_Dynamics_Sentiment_Shifts_in_Cryptocurrency_Communities/main/spark_jobs/silver_embedding_async.py", line 3, in <module>
+    from sentence_transformers import SentenceTransformer
+ModuleNotFoundError: No module named 'sentence_transformers'
+25/12/19 10:18:24 INFO ShutdownHookManager: Shutdown hook called
+25/12/19 10:18:24 INFO ShutdownHookManager: Deleting directory /private/var/folders/pp/s7zpmb252jn8nj54dxzs_5wc0000gn/T/spark-94a4b8e5-9f4a-43fc-85ca-e40b491e778d

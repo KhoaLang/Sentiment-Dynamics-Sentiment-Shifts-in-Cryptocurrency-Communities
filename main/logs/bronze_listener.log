@@ -1,0 +1,96 @@
+25/12/19 10:18:14 WARN Utils: Your hostname, MacBook-Air-cua-KhoaiQuin.local resolves to a loopback address: 127.0.0.1; using 192.168.1.32 instead (on interface en0)
+25/12/19 10:18:14 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+25/12/19 10:18:15 INFO SparkContext: Running Spark version 3.5.7
+25/12/19 10:18:15 INFO SparkContext: OS info Mac OS X, 15.5, aarch64
+25/12/19 10:18:15 INFO SparkContext: Java version 17.0.17
+25/12/19 10:18:15 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+25/12/19 10:18:15 INFO ResourceUtils: ==============================================================
+25/12/19 10:18:15 INFO ResourceUtils: No custom resources configured for spark.driver.
+25/12/19 10:18:15 INFO ResourceUtils: ==============================================================
+25/12/19 10:18:15 INFO SparkContext: Submitted application: bronze-kafka-to-delta
+25/12/19 10:18:15 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+25/12/19 10:18:15 INFO ResourceProfile: Limiting resource is cpu
+25/12/19 10:18:15 INFO ResourceProfileManager: Added ResourceProfile id: 0
+25/12/19 10:18:15 INFO SecurityManager: Changing view acls to: khoaiquin
+25/12/19 10:18:15 INFO SecurityManager: Changing modify acls to: khoaiquin
+25/12/19 10:18:15 INFO SecurityManager: Changing view acls groups to: 
+25/12/19 10:18:15 INFO SecurityManager: Changing modify acls groups to: 
+25/12/19 10:18:15 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: khoaiquin; groups with view permissions: EMPTY; users with modify permissions: khoaiquin; groups with modify permissions: EMPTY
+25/12/19 10:18:15 INFO Utils: Successfully started service 'sparkDriver' on port 63788.
+25/12/19 10:18:16 INFO SparkEnv: Registering MapOutputTracker
+25/12/19 10:18:16 INFO SparkEnv: Registering BlockManagerMaster
+25/12/19 10:18:16 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+25/12/19 10:18:16 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+25/12/19 10:18:16 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+25/12/19 10:18:16 INFO DiskBlockManager: Created local directory at /private/var/folders/pp/s7zpmb252jn8nj54dxzs_5wc0000gn/T/blockmgr-63404619-c094-4857-8a4a-59ade0afe44a
+25/12/19 10:18:16 INFO MemoryStore: MemoryStore started with capacity 434.4 MiB
+25/12/19 10:18:16 INFO SparkEnv: Registering OutputCommitCoordinator
+25/12/19 10:18:16 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+25/12/19 10:18:16 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+25/12/19 10:18:16 WARN Utils: Service 'SparkUI' could not bind on port 4041. Attempting port 4042.
+25/12/19 10:18:16 INFO Utils: Successfully started service 'SparkUI' on port 4042.
+25/12/19 10:18:16 INFO Executor: Starting executor ID driver on host 192.168.1.32
+25/12/19 10:18:16 INFO Executor: OS info Mac OS X, 15.5, aarch64
+25/12/19 10:18:16 INFO Executor: Java version 17.0.17
+25/12/19 10:18:16 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+25/12/19 10:18:16 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@70566a61 for default.
+25/12/19 10:18:16 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 63789.
+25/12/19 10:18:16 INFO NettyBlockTransferService: Server created on 192.168.1.32:63789
+25/12/19 10:18:16 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+25/12/19 10:18:16 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 192.168.1.32, 63789, None)
+25/12/19 10:18:16 INFO BlockManagerMasterEndpoint: Registering block manager 192.168.1.32:63789 with 434.4 MiB RAM, BlockManagerId(driver, 192.168.1.32, 63789, None)
+25/12/19 10:18:16 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 192.168.1.32, 63789, None)
+25/12/19 10:18:16 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 192.168.1.32, 63789, None)
+25/12/19 10:18:16 WARN SparkSession: Cannot use io.delta.sql.DeltaSparkSessionExtension to configure session extensions.
+java.lang.ClassNotFoundException: io.delta.sql.DeltaSparkSessionExtension
+	at java.base/java.net.URLClassLoader.findClass(URLClassLoader.java:445)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:592)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:469)
+	at org.apache.spark.util.SparkClassUtils.classForName(SparkClassUtils.scala:41)
+	at org.apache.spark.util.SparkClassUtils.classForName$(SparkClassUtils.scala:36)
+	at org.apache.spark.util.Utils$.classForName(Utils.scala:94)
+	at org.apache.spark.sql.SparkSession$.$anonfun$applyExtensions$2(SparkSession.scala:1367)
+	at org.apache.spark.sql.SparkSession$.$anonfun$applyExtensions$2$adapted(SparkSession.scala:1365)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at org.apache.spark.sql.SparkSession$.org$apache$spark$sql$SparkSession$$applyExtensions(SparkSession.scala:1365)
+	at org.apache.spark.sql.SparkSession.<init>(SparkSession.scala:105)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:481)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:247)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at py4j.Gateway.invoke(Gateway.java:238)
+	at py4j.commands.ConstructorCommand.invokeConstructor(ConstructorCommand.java:80)
+	at py4j.commands.ConstructorCommand.execute(ConstructorCommand.java:69)
+	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+25/12/19 10:18:16 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir.
+25/12/19 10:18:16 INFO SharedState: Warehouse path is 'file:/Users/khoaiquin/Storage/he_tinh_toan_phan_bo/Sentiment_Dynamics_Sentiment_Shifts_in_Cryptocurrency_Communities/main/spark-warehouse'.
+Traceback (most recent call last):
+  File "/Users/khoaiquin/Storage/he_tinh_toan_phan_bo/Sentiment_Dynamics_Sentiment_Shifts_in_Cryptocurrency_Communities/main/spark_jobs/bronze_streaming.py", line 47, in <module>
+    .load()
+     ^^^^^^
+  File "/Users/khoaiquin/Storage/spark-3.5.7-bin-hadoop3/python/lib/pyspark.zip/pyspark/sql/streaming/readwriter.py", line 304, in load
+  File "/Users/khoaiquin/Storage/spark-3.5.7-bin-hadoop3/python/lib/py4j-0.10.9.7-src.zip/py4j/java_gateway.py", line 1322, in __call__
+  File "/Users/khoaiquin/Storage/spark-3.5.7-bin-hadoop3/python/lib/pyspark.zip/pyspark/errors/exceptions/captured.py", line 185, in deco
+pyspark.errors.exceptions.captured.AnalysisException: Failed to find data source: kafka. Please deploy the application as per the deployment section of Structured Streaming + Kafka Integration Guide.
+25/12/19 10:18:16 INFO SparkContext: Invoking stop() from shutdown hook
+25/12/19 10:18:16 INFO SparkContext: SparkContext is stopping with exitCode 0.
+25/12/19 10:18:16 INFO SparkUI: Stopped Spark web UI at http://192.168.1.32:4042
+25/12/19 10:18:16 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+25/12/19 10:18:16 INFO MemoryStore: MemoryStore cleared
+25/12/19 10:18:16 INFO BlockManager: BlockManager stopped
+25/12/19 10:18:16 INFO BlockManagerMaster: BlockManagerMaster stopped
+25/12/19 10:18:16 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+25/12/19 10:18:16 INFO SparkContext: Successfully stopped SparkContext
+25/12/19 10:18:16 INFO ShutdownHookManager: Shutdown hook called
+25/12/19 10:18:16 INFO ShutdownHookManager: Deleting directory /private/var/folders/pp/s7zpmb252jn8nj54dxzs_5wc0000gn/T/spark-2934543d-27b5-4d9a-83d0-8b2ade24d694
+25/12/19 10:18:16 INFO ShutdownHookManager: Deleting directory /private/var/folders/pp/s7zpmb252jn8nj54dxzs_5wc0000gn/T/spark-2934543d-27b5-4d9a-83d0-8b2ade24d694/pyspark-1c61e2f8-5484-49e3-aa5c-cdfc1301fa92
+25/12/19 10:18:16 INFO ShutdownHookManager: Deleting directory /private/var/folders/pp/s7zpmb252jn8nj54dxzs_5wc0000gn/T/spark-7d3c2b3a-611a-4f3e-8898-5de9e9e1cc2e

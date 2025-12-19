@@ -1,0 +1,5 @@
+25/12/19 10:18:29 WARN Utils: Your hostname, MacBook-Air-cua-KhoaiQuin.local resolves to a loopback address: 127.0.0.1; using 192.168.1.32 instead (on interface en0)
+25/12/19 10:18:29 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/khoaiquin/Storage/he_tinh_toan_phan_bo/Sentiment_Dynamics_Sentiment_Shifts_in_Cryptocurrency_Communities/main/spark_jobs/gold_streaming.py': [Errno 2] No such file or directory
+25/12/19 10:18:29 INFO ShutdownHookManager: Shutdown hook called
+25/12/19 10:18:29 INFO ShutdownHookManager: Deleting directory /private/var/folders/pp/s7zpmb252jn8nj54dxzs_5wc0000gn/T/spark-56fcdb0e-a816-45c6-9bef-809d4e8bb2a1

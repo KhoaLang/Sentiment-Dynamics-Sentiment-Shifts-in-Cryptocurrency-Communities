@@ -68,3 +68,7 @@ Monitor Kafka Topic in kafka container.
   --topic reddit.bronze \
   --from-beginning
 ```
+
+# Gold model analysis
+
+Run the spark-jobs/standalone_inference.py first to pre-install the model to local env.
