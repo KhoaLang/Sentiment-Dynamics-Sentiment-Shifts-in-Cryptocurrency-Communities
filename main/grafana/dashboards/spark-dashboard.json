@@ -1,0 +1,76 @@
+{
+  "uid": "spark-local-regex",
+  "title": "Spark Jobs (Bronze / Silver / Gold) – Regex",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Spark Jobs Executed (Total)",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (instance) ({__name__=~\"metrics_local_.*_driver_DAGScheduler_job_allJobs_Value\"})",
+          "legendFormat": "job={{instance}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Active Spark Jobs",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (instance) ({__name__=~\"metrics_local_.*_driver_DAGScheduler_job_activeJobs_Value\"})",
+          "legendFormat": "job={{instance}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Executor Active Tasks",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (instance) ({__name__=~\"metrics_local_.*_executor_threadpool_activeTasks_Value\"})",
+          "legendFormat": "job={{instance}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "JVM Heap Memory (MB)",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (instance) ({__name__=~\"metrics_local_.*_driver_ExecutorMetrics_JVMHeapMemory_Value\"}) / 1024 / 1024",
+          "legendFormat": "job={{instance}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Minor GC Count",
+      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (instance) ({__name__=~\"metrics_local_.*_driver_ExecutorMetrics_MinorGCCount_Value\"})",
+          "legendFormat": "job={{instance}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Major GC Count",
+      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (instance) ({__name__=~\"metrics_local_.*_driver_ExecutorMetrics_MajorGCCount_Value\"})",
+          "legendFormat": "job={{instance}}"
+        }
+      ]
+    }
+  ]
+}

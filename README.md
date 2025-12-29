@@ -7,11 +7,22 @@ docker compose up
 
 # Run spark job
 
+Bronze, Silver
+
 ```
-spark-submit \
+/Users/khoaiquin/Storage/spark-3.5.7-bin-hadoop3/bin/spark-submit \
   --packages io.delta:delta-spark_2.12:3.1.0,org.apache.hadoop:hadoop-aws:3.3.4,com.amazonaws:aws-java-sdk-bundle:1.12.367,org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.3 \
   bronze_streaming.py
 ```
+
+Gold
+
+```
+/Users/khoaiquin/Storage/spark-3.5.7-bin-hadoop3/bin/spark-submit \
+  --packages io.delta:delta-spark_2.12:3.1.0,org.apache.hadoop:hadoop-aws:3.3.4,com.amazonaws:aws-java-sdk-bundle:1.12.367,org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.3,org.postgresql:postgresql:42.7.3 \
+  ../utils/gold_migrate_to_postgres.py
+```
+
 
 
 # Minio
@@ -72,3 +83,33 @@ Monitor Kafka Topic in kafka container.
 # Gold model analysis
 
 Run the spark-jobs/standalone_inference.py first to pre-install the model to local env.
+
+
+# Prometheus
+
+Manually setup Prometheus sink for Spark
+
+```
+curl -L -o spark-metrics_2.12-3.5.0.jar \
+https://repo1.maven.org/maven2/org/apache/spark/spark-metrics_2.12/3.5.0/spark-metrics_2.12-3.5.0.jar
+
+export SPARK_CLASSPATH=$PWD/spark-metrics_2.12-3.5.0.jar
+```
+
+
+# Grafana 
+
+Dashboard for Gold
+
+Start server
+
+```
+./sbin/start-thriftserver.sh \
+  --conf spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension \
+  --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog \
+  --conf spark.hadoop.fs.s3a.endpoint=http://localhost:9000 \
+  --conf spark.hadoop.fs.s3a.access.key=minio \
+  --conf spark.hadoop.fs.s3a.secret.key=minio123 \
+  --conf spark.hadoop.fs.s3a.path.style.access=true
+```
+

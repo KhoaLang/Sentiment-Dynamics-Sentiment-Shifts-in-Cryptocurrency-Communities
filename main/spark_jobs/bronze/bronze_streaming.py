@@ -43,6 +43,7 @@ kafka_df = (
         .format("kafka")
         .option("kafka.bootstrap.servers", "localhost:9092")
         .option("subscribe", "reddit.bronze")
+        .option("failOnDataLoss", "false")
         .option("startingOffsets", "latest")
         .load()
 )

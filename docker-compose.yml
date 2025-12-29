@@ -3,6 +3,7 @@ services:
     image: apache/kafka:3.7.0
     ports:
       - "9092:9092"
+      - "7071:7071"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: controller,broker
@@ -13,7 +14,13 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
+      KAFKA_JMX_PORT: 9999
+      KAFKA_JMX_HOSTNAME: kafka
+      EXTRA_ARGS: >
+        -javaagent:/opt/jmx/jmx_prometheus_javaagent.jar=7071:/opt/jmx/kafka-jmx.yml
+    volumes:
+      - ./main/monitoring/jmx:/opt/jmx
+  
   minio:
     image: minio/minio
     command: server /data --console-address ":9001"
@@ -26,16 +33,50 @@ services:
     volumes:
       - ./data/minio:/data
 
-  # prometheus:
-  #   image: prom/prometheus
-  #   volumes:
-  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #   ports:
-  #     - "9090:9090"
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./main/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
 
-  # grafana:
-  #   image: grafana/grafana
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - prometheus
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./main/grafana/provisioning:/etc/grafana/provisioning
+      - ./main/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_gold
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: gold_db
+      POSTGRES_USER: gold_user
+      POSTGRES_PASSWORD: gold_password
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gold_user -d gold_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  grafana_data:
+  postgres_data:

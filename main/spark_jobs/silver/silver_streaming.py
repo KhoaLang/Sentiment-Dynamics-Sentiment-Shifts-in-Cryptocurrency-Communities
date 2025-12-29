@@ -1,7 +1,9 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, lit, col
-from pyspark.sql.types import ArrayType, FloatType, StringType, TimestampType
-
+from pyspark.sql.types import ArrayType, DoubleType, FloatType, StringType, TimestampType
+from delta.tables import DeltaTable
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch
 # =========================
 # Spark Session
 # =========================
@@ -43,6 +45,46 @@ BRONZE_PATH = "s3a://delta-bronze/reddit_raw"
 SILVER_PATH = "s3a://delta-silver/reddit_clean"
 CHECKPOINT_PATH = "s3a://delta-silver/_checkpoints/reddit_clean"
 
+MODEL_NAME = "j-hartmann/emotion-english-distilroberta-base"
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+model.eval()
+
+LABELS = ["anger", "disgust", "fear", "joy", "sadness", "surprise"]
+
+
+def score_emotions(texts):
+    inputs = tokenizer(texts, return_tensors="pt", truncation=True, padding=True)
+    with torch.no_grad():
+        logits = model(**inputs).logits
+    probs = torch.softmax(logits, dim=1).numpy()
+    return probs
+
+
+def emotion_enrich_batch(batch_df):
+    pending = (
+        batch_df
+        .select("event_id", "subreddit", "raw_text",
+                "created_utc", "ingested_at", "processed_at")
+        .dropDuplicates(["event_id"])
+    )
+
+    if pending.isEmpty():
+        return None
+
+    # 👉 Move data to driver for ML
+    pdf = pending.toPandas()
+
+    scores = score_emotions(pdf["raw_text"].tolist())
+
+    for i, label in enumerate(LABELS):
+        pdf[label] = scores[:, i]
+
+    # 👉 Back to Spark
+    return spark.createDataFrame(pdf)
+
+
+
 # =========================
 # Read Bronze as STREAM
 # =========================
@@ -79,23 +121,43 @@ silver_df = (
             "processed_at",
             current_timestamp()
         )
-        # 🚨 Declare embedding columns NOW
-        .withColumn("embedding", lit(None).cast(ArrayType(FloatType())))
-        .withColumn("embedding_model", lit(None).cast(StringType()))
-        .withColumn("embedding_at", lit(None).cast(TimestampType()))
+        # # 🚨 Declare embedding columns NOW
+        # .withColumn("embedding", lit(None).cast(ArrayType(FloatType())))
+        # .withColumn("embedding_model", lit(None).cast(StringType()))
+        # .withColumn("embedding_at", lit(None).cast(TimestampType()))
+
+        # 🚨 Declare sentiment columns NOW
+        .withColumn("anger", lit(None).cast(DoubleType()))
+        .withColumn("joy", lit(None).cast(DoubleType()))
+        .withColumn("disgust", lit(None).cast(DoubleType()))
+        .withColumn("fear", lit(None).cast(DoubleType()))
+        .withColumn("surprise", lit(None).cast(DoubleType()))
+        .withColumn("sadness", lit(None).cast(DoubleType()))
+
         # Drop obvious garbage
         .filter(col("event_id").isNotNull())
         .filter(col("raw_text").isNotNull())
 )
 
-# =========================
-# Write to Silver (stream)
-# =========================
+
+def process_silver_batch(batch_df, batch_id):
+    enriched_df = emotion_enrich_batch(batch_df)
+
+    if enriched_df is None:
+        return
+
+    (
+        enriched_df
+        .write
+        .format("delta")
+        .mode("append")
+        .save(SILVER_PATH)
+    )
+
 
 query = (
     silver_df.writeStream
-        .format("delta")
-        .outputMode("append")
+        .foreachBatch(process_silver_batch)
         .option("checkpointLocation", CHECKPOINT_PATH)
         .start(SILVER_PATH)
 )

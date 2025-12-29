@@ -1,0 +1,17 @@
+lowercaseOutputName: true
+rules:
+  - pattern: 'kafka.server<type=(.+), name=(.+)PerSec, topic=(.+)><>Count'
+    name: kafka_server_$1_$2_total
+    labels:
+      topic: "$3"
+    type: COUNTER
+
+  - pattern: 'kafka.server<type=BrokerTopicMetrics, name=(.+)><>Count'
+    name: kafka_broker_topic_$1_total
+    type: COUNTER
+
+  - pattern: 'kafka.consumer<type=consumer-fetch-manager-metrics, client-id=(.+)><>records-lag-max'
+    name: kafka_consumer_records_lag_max
+    labels:
+      client_id: "$1"
+    type: GAUGE

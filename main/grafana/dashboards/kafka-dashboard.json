@@ -1,0 +1,25 @@
+{
+  "title": "Kafka Streaming Health",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Messages In / Sec",
+      "targets": [
+        {
+          "expr": "increase(kafka_server_brokertopicmetrics_messagesin_total[5m])",
+          "legendFormat": "{{topic}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Consumer Lag",
+      "targets": [
+        {
+          "expr": "kafka_consumer_records_lag_max",
+          "legendFormat": "{{client_id}}"
+        }
+      ]
+    }
+  ]
+}

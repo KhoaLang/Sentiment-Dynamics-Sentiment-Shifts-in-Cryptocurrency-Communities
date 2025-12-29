@@ -1,0 +1,9 @@
+{
+    "asset": "ETH",
+    "price_usd": 2961.95,
+    "market_cap": 357537955510.287,
+    "volume_24h": 15437295561.060652,
+    "source_timestamp": 1766721502,
+    "ingest_timestamp": "2025-12-26T03:58:44.475598+00:00",
+    "source": "coingecko"
+}

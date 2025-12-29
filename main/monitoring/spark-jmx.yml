@@ -1,0 +1,15 @@
+lowercaseOutputName: true
+rules:
+  - pattern: 'metrics_local_(.+)_driver_(.+)_Value'
+    name: spark_driver_$2
+    labels:
+      app_id: "$1"
+      role: "driver"
+    type: GAUGE
+
+  - pattern: 'metrics_local_(.+)_executor_(.+)_Value'
+    name: spark_executor_$2
+    labels:
+      app_id: "$1"
+      role: "executor"
+    type: GAUGE
